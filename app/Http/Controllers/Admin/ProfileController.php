@@ -9,9 +9,9 @@ use App\Http\Controllers\Controller;
 use App\Profile;
 
 // 以下を追記(PHP/Laravel 17)
-//use App\History;
+use App\ProfileHistory;
 
-//use Carbon\Carbon;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
@@ -31,7 +31,7 @@ class ProfileController extends Controller
         $form = $request->all();
         
         // フォームから送信されてきた_tokenを削除する
-        unset($form['_token']);
+        //unset($form['_token']);
         // フォームから送信されてきたimageを削除する
         //unset($form['image']);
         
@@ -62,17 +62,17 @@ class ProfileController extends Controller
         // 送信されてきたフォームデータを格納する
         $profile_form = $request->all();
         
-        //unset($profile_form['_token']);
+        unset($profile_form['_token']);
         
         // 該当するデータを上書きして保存する
         $profile->fill($profile_form)->save();
         
         // 以下を追記(PHP/Laravel 17)
-        //$history = new History();
-        //$history->profiles_id = $profile->id;
-        //$history->edited_at = Carbon::now();
-        //$history->save();
+        $history = new ProfileHistory();
+        $history->profile_id = $profile->id;
+        $history->edited_at = Carbon::now();
+        $history->save();
         
-        return redirect('admin/profile/edit');
+        return redirect()->back();
     }
 }
